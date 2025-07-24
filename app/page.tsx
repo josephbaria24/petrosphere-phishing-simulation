@@ -8,19 +8,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Shield, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { useEffect } from "react"
+
+
+
+
 
 interface FormData {
   email: string
   password: string
   confirmPassword: string
 }
-
-// interface FormErrors {
-//   email?: string
-//   password?: string
-//   confirmPassword?: string
-//   general?: string[]
-// }
 
 
 
@@ -44,6 +42,7 @@ interface CompromisedData {
     connectedDevices: number
   }
 }
+
 
 const PasswordResetSimulation: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -168,6 +167,30 @@ const PasswordResetSimulation: React.FC = () => {
     setShowConfirmPassword(false)
   }
 
+  
+  useEffect(() => {
+    // Collect IP and timestamp, and optionally, logged email if available
+    const trackVisitor = async () => {
+      try {
+        await fetch("/api/log-visit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event: "page_visited",
+            email: formData.email || null,
+            timestamp: new Date().toISOString(),
+          }),
+        })
+      } catch (err) {
+        console.error("Tracking failed", err)
+      }
+    }
+  
+    trackVisitor()
+  }, [])
+
   if (isLoading) {
     const progressMessages = [
       "Validating credentials...",
@@ -176,6 +199,10 @@ const PasswordResetSimulation: React.FC = () => {
       "Harvesting contact lists...",
       "Compromising system access...",
     ]
+
+
+
+
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -351,6 +378,7 @@ const PasswordResetSimulation: React.FC = () => {
     )
   }
 
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
