@@ -15,11 +15,34 @@ interface FormData {
   confirmPassword: string
 }
 
-interface FormErrors {
-  email?: string
-  password?: string
-  confirmPassword?: string
-  general?: string[]
+// interface FormErrors {
+//   email?: string
+//   password?: string
+//   confirmPassword?: string
+//   general?: string[]
+// }
+
+
+
+interface CompromisedData {
+  personalInfo: {
+    email: string
+    password: string
+    employeeId: string
+    department: string
+    accessLevel: string
+  }
+  companyData: {
+    contacts: number
+    documents: number
+    systemAccess: string[]
+    financialRecords: string
+  }
+  networkInfo: {
+    ipAddress: string
+    location: string
+    connectedDevices: number
+  }
 }
 
 const PasswordResetSimulation: React.FC = () => {
@@ -34,7 +57,7 @@ const PasswordResetSimulation: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [progressStep, setProgressStep] = useState<number>(0)
-  const [compromisedData, setCompromisedData] = useState<any>(null)
+  const [compromisedData, setCompromisedData] = useState<CompromisedData | null>(null)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
